@@ -4,7 +4,6 @@ import 'package:flutter/services.dart';
 
 import '../constants/app_colors.dart';
 import '../constants/app_text_styles.dart';
-import 'dart:developer';
 
 class CustomTextFormField extends StatefulWidget {
   final EdgeInsetsGeometry? padding;
@@ -20,6 +19,8 @@ class CustomTextFormField extends StatefulWidget {
   final List<TextInputFormatter>? inputFormatters;
   final FormFieldValidator<String>? validator;
   final String? helperText;
+  final GestureTapCallback? onTap;
+  final bool readOnly;
 
   const CustomTextFormField({
     Key? key,
@@ -36,6 +37,8 @@ class CustomTextFormField extends StatefulWidget {
     this.inputFormatters,
     this.validator,
     this.helperText,
+    this.onTap,
+    this.readOnly = false,
   }) : super(key: key);
 
   @override
@@ -62,6 +65,8 @@ class _CustomTextFormFieldState extends State<CustomTextFormField> {
           widget.padding ??
           const EdgeInsets.symmetric(horizontal: 24.0, vertical: 12.0),
       child: TextFormField(
+        readOnly: widget.readOnly,
+        onTap: widget.onTap,
         onChanged: (value) {
           if (value.length == 1) {
             setState(() {
@@ -74,7 +79,7 @@ class _CustomTextFormFieldState extends State<CustomTextFormField> {
           }
         },
         validator: widget.validator,
-        style: AppTextStyles.inputText.copyWith(color: AppColors.cinza),
+        style: AppTextStyles.inputText.copyWith(color: AppColors.azul_claro),
         inputFormatters: widget.inputFormatters,
         obscureText: widget.obscureText ?? false,
         textInputAction: widget.textInputAction,
@@ -87,23 +92,10 @@ class _CustomTextFormFieldState extends State<CustomTextFormField> {
           errorMaxLines: 3,
           helperText: _helperText,
           helperMaxLines: 3,
-          errorStyle: TextStyle(color: Colors.red),
           suffixIcon: widget.suffixIcon,
           hintText: widget.hintText,
           floatingLabelBehavior: FloatingLabelBehavior.always,
           labelText: widget.labelText?.toUpperCase(),
-          labelStyle: AppTextStyles.inputLabelText.copyWith(
-            color: AppColors.cinza,
-          ),
-          focusedBorder: defaultBorder,
-          errorBorder: defaultBorder.copyWith(
-            borderSide: const BorderSide(color: AppColors.vermelho),
-          ),
-          focusedErrorBorder: defaultBorder.copyWith(
-            borderSide: const BorderSide(color: AppColors.vermelho),
-          ),
-          enabledBorder: defaultBorder,
-          disabledBorder: defaultBorder,
         ),
       ),
     );

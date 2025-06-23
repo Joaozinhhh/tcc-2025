@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:src/common/constants/app_colors.dart';
 import 'package:src/common/constants/app_text_styles.dart';
+import 'package:src/common/constants/routes.dart';
 import 'package:src/common/widgets/multi_text_button.dart';
 import 'package:src/common/widgets/primary_button.dart';
 
@@ -48,17 +49,14 @@ class OnboardingPage extends StatelessWidget {
             child: PrimaryButton(
               text: 'Criar',
               onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => const NextPage()),
-                );
+                Navigator.pushNamed(context, NamedRouters.signUp);
               },
             ),
           ),
           const SizedBox(height: 0.0),
 
           MultiTextButton(
-            onPressed: () => print('Botão pressionado'),
+            onPressed: () => Navigator.pushNamed(context, NamedRouters.signIn),
 
             children: [
               Text(

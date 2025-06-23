@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:src/common/constants/app_colors.dart';
 import 'package:src/common/constants/app_text_styles.dart';
+import 'package:src/common/constants/routes.dart';
 import 'package:src/common/utils/uppercase_text_formatter.dart';
 import 'package:src/common/utils/validator.dart';
 import 'package:src/common/widgets/custom_bottom_sheet.dart';
@@ -9,12 +10,10 @@ import 'package:src/common/widgets/multi_text_button.dart';
 import 'package:src/common/widgets/password_form_field.dart';
 import 'package:src/common/widgets/primary_button.dart';
 import 'package:src/common/widgets/custom_text_form_field.dart';
-import 'package:src/features/onboarding/onboarding_page.dart';
 import 'package:src/features/sign_up/sign_up_state.dart';
 import 'package:src/features/sign_up/sign_up_controller.dart';
+import 'package:src/locator.dart';
 import 'dart:developer';
-
-import 'package:src/features/sign_up/sign_up_controller.dart';
 
 class SignUpPage extends StatefulWidget {
   const SignUpPage({super.key});
@@ -27,11 +26,15 @@ class SignUpPage extends StatefulWidget {
 
 class _SignUpPageState extends State<SignUpPage> {
   final _formKey = GlobalKey<FormState>();
+  final _nameController = TextEditingController();
+  final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
-  final _controller = SignUpController();
+  final _controller = locator.get<SignUpController>();
 
   @override
   void dispose() {
+    _nameController.dispose();
+    _emailController.dispose();
     _passwordController.dispose();
     super.dispose();
   }
@@ -40,25 +43,24 @@ class _SignUpPageState extends State<SignUpPage> {
   void initState() {
     super.initState();
     _controller.addListener(() {
-      if (_controller.state is SignUpLoadingSate) {
+      if (_controller.state is SignUpLoadingState) {
         showDialog(
           context: context,
           builder: (context) => const CustomCircularProgressIndicator(),
         );
       }
-      if (_controller.state is SignUpSuccessSate) {
+      if (_controller.state is SignUpSuccessState) {
         Navigator.pop(context);
-        Navigator.push(
-          context,
-          MaterialPageRoute(
-            builder:
-                (context) => Scaffold(body: Center(child: Text("NOva tela"))),
-          ),
-        );
+        Navigator.restorablePushReplacementNamed(context, NamedRouters.home);
       }
-      if (_controller.state is SignUpErrorSate) {
+      if (_controller.state is SignUpErrorState) {
+        final error = _controller.state as SignUpErrorState;
         Navigator.pop(context);
-        customModalBottomSheet(context);
+        customModalBottomSheet(
+          context,
+          content: error.message,
+          buttonText: 'Tentar novamente',
+        );
       }
     });
   }
@@ -121,6 +123,7 @@ class _SignUpPageState extends State<SignUpPage> {
             child: Column(
               children: [
                 CustomTextFormField(
+                  controller: _nameController,
                   labelText: "Seu nome:",
                   hintText: "JOAO ",
                   inputFormatters: [UpperCaseTextInputFormatter()],
@@ -128,6 +131,7 @@ class _SignUpPageState extends State<SignUpPage> {
                 ),
 
                 CustomTextFormField(
+                  controller: _emailController,
                   labelText: "Seu email",
                   hintText: "joao@gmail.com",
                   validator: Validator.validateEmail,
@@ -167,7 +171,11 @@ class _SignUpPageState extends State<SignUpPage> {
                     _formKey.currentState != null &&
                     _formKey.currentState!.validate();
                 if (valid) {
-                  _controller.doSignUp();
+                  _controller.signUp(
+                    name: _nameController.text,
+                    email: _emailController.text,
+                    password: _passwordController.text,
+                  );
                 } else {
                   log("erro ao logar");
                 }
@@ -177,7 +185,7 @@ class _SignUpPageState extends State<SignUpPage> {
           const SizedBox(height: 0.0),
 
           MultiTextButton(
-            onPressed: () => print('Botão pressionado'),
+            onPressed: () => Navigator.pushNamed(context, NamedRouters.signIn),
 
             children: [
               Text(

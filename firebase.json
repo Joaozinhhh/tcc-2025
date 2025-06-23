@@ -1,0 +1,39 @@
+{
+  "flutter": {
+    "platforms": {
+      "android": {
+        "default": {
+          "projectId": "tcc-aplicatico",
+          "appId": "1:398175482458:android:74199987f93537323fde63",
+          "fileOutput": "android/app/google-services.json"
+        }
+      },
+      "dart": {
+        "lib/firebase_options.dart": {
+          "projectId": "tcc-aplicatico",
+          "configurations": {
+            "android": "1:398175482458:android:74199987f93537323fde63",
+            "ios": "1:398175482458:ios:f99a099f0e3c8be43fde63",
+            "macos": "1:398175482458:ios:f99a099f0e3c8be43fde63",
+            "web": "1:398175482458:web:70cac0a59f5f61703fde63",
+            "windows": "1:398175482458:web:a4442a53d31780de3fde63"
+          }
+        }
+      }
+    }
+  },
+  "functions": [
+    {
+      "source": "functions",
+      "codebase": "default",
+      "ignore": [
+        "node_modules",
+        ".git",
+        "firebase-debug.log",
+        "firebase-debug.*.log",
+        "*.local"
+      ],
+      "predeploy": []
+    }
+  ]
+}

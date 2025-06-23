@@ -7,12 +7,9 @@ class PrimaryButton extends StatelessWidget {
   final VoidCallback? onPressed;
   final String text;
 
-  const PrimaryButton({Key? key, this.onPressed, required this.text})
-    : super(key: key);
+  const PrimaryButton({super.key, this.onPressed, required this.text});
 
-  final BorderRadius _borderRadius = const BorderRadius.all(
-    Radius.circular(25.0),
-  );
+  final BorderRadius _borderRadius = const BorderRadius.all(Radius.circular(25.0));
 
   @override
   Widget build(BuildContext context) {
@@ -26,22 +23,10 @@ class PrimaryButton extends StatelessWidget {
           gradient: LinearGradient(
             begin: Alignment.topCenter,
             end: Alignment.bottomCenter,
-            colors:
-                onPressed != null
-                    ? [AppColors.azul_escuro, AppColors.azul_claro]
-                    : [AppColors.azul_escuro, AppColors.azul_claro],
+            colors: onPressed != null ? [AppColors.azul_escuro, AppColors.azul_claro] : [AppColors.azul_escuro, AppColors.azul_claro],
           ),
         ),
-        child: InkWell(
-          borderRadius: _borderRadius,
-          onTap: onPressed,
-          child: Align(
-            child: Text(
-              text,
-              style: AppTextStyles.MediumText.copyWith(color: AppColors.branco),
-            ),
-          ),
-        ),
+        child: InkWell(borderRadius: _borderRadius, onTap: onPressed, child: Align(child: Text(text, style: AppTextStyles.MediumText.copyWith(color: AppColors.branco)))),
       ),
     );
   }

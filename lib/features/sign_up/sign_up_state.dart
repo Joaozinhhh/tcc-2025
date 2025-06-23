@@ -1,9 +1,13 @@
 abstract class SignUpState {}
 
-class SignUpInitialSate extends SignUpState {}
+class SignUpInitialState extends SignUpState {}
 
-class SignUpLoadingSate extends SignUpState {}
+class SignUpLoadingState extends SignUpState {}
 
-class SignUpSuccessSate extends SignUpState {}
+class SignUpSuccessState extends SignUpState {}
 
-class SignUpErrorSate extends SignUpState {}
+class SignUpErrorState extends SignUpState {
+  final String message;
+
+  SignUpErrorState(this.message);
+}

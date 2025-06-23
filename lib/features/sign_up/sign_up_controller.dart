@@ -1,12 +1,22 @@
-//refactoring guru
-
-import 'dart:developer';
-
 import 'package:flutter/foundation.dart';
-import 'package:src/features/sign_up/sign_up_state.dart';
+
+import '../../services/auth_service.dart';
+import '../../services/graphql_service.dart';
+import '../../services/secure_storage.dart';
+import 'sign_up_state.dart';
 
 class SignUpController extends ChangeNotifier {
-  SignUpState _state = SignUpInitialSate();
+  final AuthService authService;
+  final SecureStorage secureStorage;
+  final GraphQLService graphQLService;
+
+  SignUpController({
+    required this.authService,
+    required this.secureStorage,
+    required this.graphQLService,
+  });
+
+  SignUpState _state = SignUpInitialState();
 
   SignUpState get state => _state;
 
@@ -15,21 +25,30 @@ class SignUpController extends ChangeNotifier {
     notifyListeners();
   }
 
-  Future<bool> doSignUp() async {
-    _changeState(SignUpLoadingSate());
+  Future<void> signUp({
+    required String name,
+    required String email,
+    required String password,
+  }) async {
+    _changeState(SignUpLoadingState());
 
     try {
-      await Future.delayed(const Duration(seconds: 2));
+      final user = await authService.signUp(
+        name: name,
+        email: email,
+        password: password,
+      );
+      if (user.id != null) {
+        await secureStorage.write(key: "CURRENT_USER", value: user.toJson());
 
-      // throw Exception("Erro ao cadastrar usuário");
-      log("usario criado com sucesso");
+        await graphQLService.init();
 
-      _changeState(SignUpSuccessSate());
-
-      return true;
+        _changeState(SignUpSuccessState());
+      } else {
+        throw Exception();
+      }
     } catch (e) {
-      _changeState(SignUpErrorSate());
-      return false;
+      _changeState(SignUpErrorState(e.toString()));
     }
   }
 }
